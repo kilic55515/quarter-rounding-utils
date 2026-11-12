@@ -24,3 +24,10 @@ Quarter boundaries are calendar boundaries, not fixed-length intervals. A naive 
 ## Edge case to watch
 
 `'nearest'` uses the exact midpoint between quarter starts. When a date lands precisely on that midpoint the result rounds up to the next quarter. This is a deliberate tie-break, not a bug, but it means 15 August 2024 at 00:00:00 UTC rounds to Q4 rather than Q3.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
